@@ -1,5 +1,4 @@
 fs = require 'fs'
-
 require 'colors'
 
 module.exports = (program, cb) ->
@@ -16,12 +15,10 @@ module.exports = (program, cb) ->
   catch error
     return fail("Couldn't find that scraper", error)
 
-
-  jsonPath = program.args[0].replace(/coffee$/, 'json')
+  jsonPath = program.args[0].replace(/coffee$|js$/, 'json')
 
   if !program.force && fs.existsSync(jsonPath)
     return cb(JSON.parse(fs.readFileSync(jsonPath)))
-
 
   try
     opts =
@@ -29,7 +26,7 @@ module.exports = (program, cb) ->
 
     scraper opts, (parsedJson) ->
       unless program.skipsave
-        writePath = program.args[0].replace(/coffee$/, 'json')
+        writePath = program.args[0].replace(/coffee$|js$/, 'json')
         fs.writeFileSync writePath, JSON.stringify(parsedJson, null, 2)
         console.log "Cached results to #{writePath}".green
 
